@@ -2,14 +2,20 @@ import React, { createContext, useState } from "react";
 import "./App.css";
 import Form from "./components/form";
 export const AppContext = createContext();
-const productsData = [{Itm:"Hen",Pri:"100",qut:"3",Amt:300},{Itm:"dogs",Pri:"1000",qut:"3",Amt:3000}]
+const productsData = [{Itm:"dogs",Pri:"100",qut:"10",Amt:300},{Itm:"hens",Pri:"1000",qut:"3",Amt:3000},{Itm:"item1",Pri:"1000",qut:"15",Amt:15000},{Itm:"item2",Pri:"1000",qut:"2",Amt:2000}]
 function App() {
+  productsData.sort((a,b)=>a.qut-b.qut);
   const [data,setData] = useState(productsData);
   const [state, setState] = useState(true);
   const [editItem,setEdit] = useState(undefined);
   const removeItem = function(i){
     data.splice(i,1);
     setData([...data])
+  }
+  
+  const onChange = function(e){
+    const filteredItems = productsData.filter(item=>item.Itm.toLowerCase().includes(e.target.value.toLowerCase()));
+    setData(filteredItems);
   }
   return (
     <div className="App">
@@ -23,6 +29,10 @@ function App() {
           >
             Add Item
           </button>
+        </div>
+        <div className="search">
+          <span className="material-icons">search</span>
+          <input type="text" placeholder="Search item" onChange={onChange}/>
         </div>
         <Form/>
         <div className="div2">
@@ -42,7 +52,7 @@ function App() {
                 return <tr key={i}>
                   <td>{item.Itm}</td>
                   <td>{item.Pri}</td>
-                  <td>{item.qut}</td>
+                  <td style={{background:item.qut<10?"limegreen":"transparent"}}>{item.qut}</td>
                   <td>{item.Amt}</td>
                   <td>
                     <button onClick={()=>{setEdit(i),setState(false)}}>Edit</button>
